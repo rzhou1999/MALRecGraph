@@ -5,7 +5,7 @@ Visualizer for MyAnimeList userrecs.
 ![alt text](https://raw.githubusercontent.com/rzhou1999/MALRecGraph/master/MALRecGraph.png "MALRecGraph example image")
 
 ## Usage:
-Currently MALRecGraph is not hosted anywhere. For local usage, after cloning and downloading all the dependencies, you will need to set up the backend by running ```python recapi.py``` from within the ```api``` directory. This sets up a server that listens for requests on port 5000 on localhost-- the frontend has already been configured to point to this. After that, open up index.html on any modern web browser and paste in a MAL link. Clicking any anime on the graph will bring up to 5 other shows that people have recommended as similar into the graph. Right clicking will open that anime in a new tab/window (you may need to enable popups for this).
+Currently MALRecGraph is not hosted anywhere. For local usage, after cloning and downloading all the dependencies, you will need to set up the backend by running ```python recapi.py``` from within the ```api``` directory. This sets up a server that listens for requests on port 5000 on localhost-- the frontend has already been configured to point to this. After that, open up ```index.html``` on any modern web browser and paste in a MAL link. Clicking any anime on the graph will bring up to 5 other shows that people have recommended as similar into the graph. Right clicking will open that anime in a new tab/window (you may need to enable popups for this).
 
 ## Todo(?):
 - [ ] Add proper documentation (!!)
