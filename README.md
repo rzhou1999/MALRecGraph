@@ -31,10 +31,17 @@ One of two things probably happened here. First, the response might just have no
 ## Credits
 
 MALRecGraph is powered by:
+
 [MyAnimeList](https://myanimelist.net/) for the recommendations themselves
+
 [vis.js](http://visjs.org/) for the visualization
+
 [Flask](http://flask.pocoo.org/), [Swagger](https://swagger.io/) and [Connexion](https://connexion.readthedocs.io/en/latest/) for the API
+
 [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/) for the web scraping
+
 [jQuery](https://jquery.com/) / [jQuery BlockUI](http://malsup.com/jquery/block/) for the modal dialogues
+
 [Flask-CORS](https://flask-cors.readthedocs.io/en/latest/) for enabling CORS
+
 [Octicons](https://octicons.github.com/) for the icons in the top left
