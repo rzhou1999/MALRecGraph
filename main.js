@@ -176,11 +176,11 @@ window.onload = function(){
 
   var githubButton = document.getElementById('github');
   githubButton.onclick = function(event) {
-    window.open("https://github.com/rzhou1999");
+    window.open("https://github.com/rzhou1999/MALRecGraph");
   };
 
   var faqButton = document.getElementById('faq');
   faqButton.onclick = function(event) {
-    window.open("https://github.com/rzhou1999");
+    window.open("https://github.com/rzhou1999/MALRecGraph/blob/master/README.md#faq");
   };
 };
