@@ -18,6 +18,8 @@ Currently MALRecGraph is not hosted anywhere. For local usage, after cloning and
 - [ ] Use basic NLP to display most important/common phrases of user recommendations when any edge is clicked
 - [ ] "Hands-free" mode
 - [ ] Better error handling
+- [ ] Should probably add a license. I'll figure it out sometime soon.
+- [ ] Better initial placement of nodes.
 
 ## FAQ:
 How is this any different from/better than [MALMap](https://igfod13.github.io/MALmap/)?
