@@ -1,0 +1,71 @@
+swagger: "2.0"
+info:
+  description: This is the swagger file that goes with our server code
+  version: "1.0.0"
+  title: Swagger REST Article
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+basePath: "/api"
+
+# Paths supported by the server application
+paths:
+  /getrecs:
+    get:
+      operationId: "getrecs.read"
+      tags:
+        - "getrecs"
+      summary: ""
+      description: ""
+      parameters:
+        - name: malid
+          in: query
+          type: integer
+          description: id of current
+          required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            type: "array"
+            items:
+              properties:
+                surl:
+                  type: "string"
+                simg:
+                  type: "string"
+                stitle:
+                  type: "string"
+                sid:
+                  type: "string"
+  /getinfo:
+    get:
+      operationId: "getrecs.readOne"
+      tags:
+        - "getinfo"
+      summary: ""
+      description: ""
+      parameters:
+        - name: malid
+          in: query
+          type: integer
+          description: id of current
+          required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            items:
+              properties:
+                surl:
+                  type: "string"
+                simg:
+                  type: "string"
+                stitle:
+                  type: "string"
+                sid:
+                  type: "string"
+        400:
+          description: Bad request.

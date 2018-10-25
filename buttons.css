@@ -1,0 +1,30 @@
+/* The group of buttons that lives in the bottom right */
+.button-container {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  height: 40px;
+
+  z-index: 2;
+  border-radius: 7px;
+  overflow: visible;
+  border: 1px solid #aaa;
+  background-color: white;
+}
+
+.button-container button {
+  float:left;
+  display: inline-block;
+  height: 100%;
+  width: 40px;
+  padding: 5px;
+  margin: 0;
+
+  background-color: rgba(255, 255, 255, 0);
+  border: none;
+  border-left: 1px solid #aaa;
+}
+
+.button-container button:first-of-type {
+  border-left: none;
+}
