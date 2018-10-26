@@ -18,6 +18,8 @@ Currently MALRecGraph is not hosted anywhere. For local usage, after cloning and
 - [ ] Use basic NLP to display most important/common phrases of user recommendations when any edge is clicked
 - [ ] "Hands-free" mode
 - [ ] Better error handling
+- [ ] Should probably add a license. I'll figure it out sometime soon.
+- [ ] Better initial placement of nodes.
 
 ## FAQ:
 How is this any different from/better than [MALMap](https://igfod13.github.io/MALmap/)?
@@ -29,10 +31,17 @@ One of two things probably happened here. First, the response might just have no
 ## Credits
 
 MALRecGraph is powered by:
+
 [MyAnimeList](https://myanimelist.net/) for the recommendations themselves
+
 [vis.js](http://visjs.org/) for the visualization
+
 [Flask](http://flask.pocoo.org/), [Swagger](https://swagger.io/) and [Connexion](https://connexion.readthedocs.io/en/latest/) for the API
+
 [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/) for the web scraping
+
 [jQuery](https://jquery.com/) / [jQuery BlockUI](http://malsup.com/jquery/block/) for the modal dialogues
+
 [Flask-CORS](https://flask-cors.readthedocs.io/en/latest/) for enabling CORS
+
 [Octicons](https://octicons.github.com/) for the icons in the top left
