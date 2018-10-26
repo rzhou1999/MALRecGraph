@@ -129,7 +129,7 @@ $(document).ready(function() {
             starter = starter.substring(0,starter.lastIndexOf("/"))
             starter = starter.substring(starter.lastIndexOf("/")+1)
             $.blockUI({ message: "<h1>Please wait...</h1>", css: cssConst });
-            httpGetAsync("http://localhost:5000/api/getinfo?malid="+starter, handleStarter, starter)
+            httpGetAsync("http://35.243.181.45:5000/api/getinfo?malid="+starter, handleStarter, starter)
         });
     });
 
@@ -156,7 +156,7 @@ network.on( 'click', function(properties) {
   var ids = properties.nodes;
   var clickedNodes = nodes.get(ids);
   console.log('clicked nodes:', clickedNodes);
-  httpGetAsync("http://localhost:5000/api/getrecs?malid="+clickedNodes[0]['id'], handleRequest, clickedNodes[0]['id'])
+  httpGetAsync("http://35.243.181.45:5000/api/getrecs?malid="+clickedNodes[0]['id'], handleRequest, clickedNodes[0]['id'])
 });
 
 network.on("oncontext", function(properties) {
