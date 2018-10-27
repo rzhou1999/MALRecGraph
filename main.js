@@ -151,6 +151,7 @@ $(document).ready(function() {
             var myEvilListOfSuggestions =
             [
               "https://myanimelist.net/anime/37786/Yagate_Kimi_ni_Naru",
+              "https://myanimelist.net/anime/14741/Chuunibyou_demo_Koi_ga_Shitai",
               "https://myanimelist.net/anime/20457/Inari_Konkon_Koi_Iroha",
               "https://myanimelist.net/anime/13333/Tari_Tari",
               "https://myanimelist.net/anime/32281/Kimi_no_Na_wa",
