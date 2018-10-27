@@ -13,7 +13,7 @@ function handleRequest(dump, cid){
   var json = JSON.parse(dump);
   for (var i = 0; i < json.length; i++){
     if (cid!=json[i]['sid']){
-      if(addNode(json[i]['surl'],json[i]['simg'],json[i]['stitle'],json[i]['sid'])==0){
+      if(addNode(json[i]['surl'],json[i]['simg'],json[i]['stitle'],json[i]['sid'], cid)==0){
         addEdge(cid, json[i]['sid'],json.length)
       }
     }
@@ -36,12 +36,7 @@ function httpGetAsync(theUrl, callback, cid)
 }
 
 function addEdge(id1, id2, numAttached){
-  if (id2<id1){
-    var temp = id1;
-    id1 = id2;
-    id2 = temp;
-  }
-  edges.add({from: id1, to: id2, length: Math.max(numAttached * 33, 95)})
+  edges.add({from: id1, to: id2, length: Math.max(numAttached * 33, 95), color:"#2B7CE9", hoverWidth : 0, selectionWidth : 0})
 }
 
 function chunk(str, n) {
@@ -65,14 +60,32 @@ function chunk(str, n) {
       retVal.push(words.shift())
     }
   }
-  console.log(retVal);
+  //console.log(retVal);
   return retVal;
 };
 
-function addNode(url,img,title,sid){
+function genNode(sid, title, img, parent){
+  return {
+    id: sid,
+    label: chunk(title, 20).join('\n'),
+    image: img,
+    parent: parent,
+    shape: 'image',
+    font: font,
+    borderWidth : 5,
+    borderWidthSelected : 5,
+    color:{
+      border:"#f7ff23",
+      hover:{border:"#f7ff23"},
+      highlight:{border:"#f7ff23"}
+    }
+  };
+};
+
+function addNode(url,img,title,sid,parent){
   try {
     nodes.add([
-      {id: sid, label: chunk(title, 20).join('\n'), image: img, shape: 'image', font: font}
+      genNode(sid, title, img, parent)
     ]);
     return 0;
 }
@@ -97,9 +110,13 @@ var options = {
     edges: {
         width: 2
     },
-    physics:{
-      solver: 'repulsion',
-  }
+      physics:{
+        solver: 'repulsion',
+    },
+    interaction:{
+      hover: true,
+      hoverConnectedEdges: false,
+    }
 };
 nodes = new vis.DataSet(options);
 var edges = new vis.DataSet();
@@ -110,18 +127,21 @@ var edges = new vis.DataSet();
 
 function handleStarter(dump, cid){
   var json = JSON.parse(dump);
-  addNode(json['surl'],json['simg'],json['stitle'],json['sid']);
+  addNode(json['surl'],json['simg'],json['stitle'],json['sid'], 0);
   $.unblockUI();
   network.focus(cid,{scale:2});
 }
 
 var cssConst = {
   margin: 'auto',
-  width: '300px',
+  width: '400px',
   paddingTop: '10px',
   paddingRight: '30px',
   paddingBottom: '30px',
   paddingLeft: '30px',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
 }
 
 $(document).ready(function() {
@@ -159,7 +179,7 @@ network.on( 'click', function(properties) {
   network.redraw();
   var ids = properties.nodes;
   var clickedNodes = nodes.get(ids);
-  console.log('clicked nodes:', clickedNodes);
+  //console.log('clicked nodes:', clickedNodes);
   if (clickedNodes.length != 0)
     httpGetAsync("http://35.243.181.45:5000/api/getrecs?malid="+clickedNodes[0]['id'], handleRequest, clickedNodes[0]['id']);
 });
@@ -167,8 +187,65 @@ network.on( 'click', function(properties) {
 network.on("oncontext", function(properties) {
   var pointer = properties.pointer;
   var clickedNodes = network.getNodeAt(pointer.DOM);
-  console.log('rclicked nodes:', clickedNodes);
+  //console.log('rclicked nodes:', clickedNodes);
   window.open("https://myanimelist.net/anime/"+clickedNodes)
+  //httpGetAsync("http://localhost:5000/api/getrecs?malid="+clickedNodes[0]['id'], handleRequest, clickedNodes[0]['id'])
+});
+
+function highlightNode(nodeid){
+    if(nodeid!=0)nodes.update({id:nodeid, shapeProperties: { useBorderWithImage:true}});
+}
+
+function unhighlightNode(nodeid){
+    if(nodeid!=0)nodes.update({id:nodeid, shapeProperties: { useBorderWithImage:false}});
+}
+
+function highlightEdge(fromId, toId){
+    var edgeList =
+      edges.get({
+        filter: function (item) {
+          return (item.from == fromId && item.to == toId);
+        }
+      });
+    edge = edgeList[0];
+    edge.color = "#f7ff23";
+    edge.width = 3;
+    edges.update(edge);
+}
+
+function unhighlightEdge(fromId, toId){
+    var edgeList =
+      edges.get({
+        filter: function (item) {
+          return (item.from == fromId && item.to == toId);
+        }
+      });
+    edge = edgeList[0];
+    edge.color = "#2B7CE9";
+    edge.width = 1;
+    edges.update(edge);
+}
+
+function traceBackNodes(currNode, nodeFunc, edgeFunc){
+  nodeFunc(currNode);
+  if (currNode!=0){
+    var parentId = nodes.get(currNode)['parent'];
+    if(parentId!=0)edgeFunc(parentId, currNode);
+    traceBackNodes(parentId, nodeFunc, edgeFunc);
+  }
+}
+
+network.on("hoverNode", function(properties) {
+  var hoveredNode = properties.node;
+  //console.log('hovered nodes:', hoveredNode);
+  traceBackNodes(hoveredNode, highlightNode, highlightEdge);
+  //httpGetAsync("http://localhost:5000/api/getrecs?malid="+clickedNodes[0]['id'], handleRequest, clickedNodes[0]['id'])
+});
+
+network.on("blurNode", function(properties) {
+  var unhoveredNode = properties.node;
+  //console.log('unhovered nodes:', unhoveredNode);
+  traceBackNodes(unhoveredNode, unhighlightNode, unhighlightEdge);
   //httpGetAsync("http://localhost:5000/api/getrecs?malid="+clickedNodes[0]['id'], handleRequest, clickedNodes[0]['id'])
 });
 
