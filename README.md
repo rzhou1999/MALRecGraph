@@ -13,14 +13,15 @@ For local usage, after cloning and downloading all the dependencies, you will ne
 - [ ] Separate main.js into smaller, more readable files
 - [ ] Add loading bar when waiting for response
 - [ ] Optimize web scraping code
-- [ ] More visual pizazz (edge highlighting, only display related nodes on hover over, etc.)
+- [x] More visual pizazz (edge highlighting, only display related nodes on hover over, etc.)
 - [ ] Separate main.js into smaller, more readable files
+- [x] Get a starter anime from me! (oh boy, where could this go wrong)
 - [ ] Random starter anime feature
 - [ ] Use basic NLP to display most important/common phrases of user recommendations when any edge is clicked
 - [ ] "Hands-free" mode
 - [ ] Better error handling
 - [ ] Should probably add a license. I'll figure it out sometime soon.
-- [ ] Better initial placement of nodes.
+- [x] Better initial placement of nodes.
 
 ## FAQ:
 How is this any different from/better than [MALMap](https://igfod13.github.io/MALmap/)?
