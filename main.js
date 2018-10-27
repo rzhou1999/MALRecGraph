@@ -96,7 +96,10 @@ var options = {
     },
     edges: {
         width: 2
-    }
+    },
+    physics:{
+      solver: 'repulsion',
+  }
 };
 nodes = new vis.DataSet(options);
 var edges = new vis.DataSet();
@@ -153,10 +156,12 @@ var data = {
 network = new vis.Network(container, data, options);
 
 network.on( 'click', function(properties) {
+  network.redraw();
   var ids = properties.nodes;
   var clickedNodes = nodes.get(ids);
   console.log('clicked nodes:', clickedNodes);
-  httpGetAsync("http://35.243.181.45:5000/api/getrecs?malid="+clickedNodes[0]['id'], handleRequest, clickedNodes[0]['id'])
+  if (clickedNodes.length != 0)
+    httpGetAsync("http://35.243.181.45:5000/api/getrecs?malid="+clickedNodes[0]['id'], handleRequest, clickedNodes[0]['id']);
 });
 
 network.on("oncontext", function(properties) {
