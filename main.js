@@ -8,8 +8,8 @@ var font ={
             color : '#ffffff'
         }
 
+//handles non-starter request reponses
 function handleRequest(dump, cid){
-  //console.log("resp received");
   var json = JSON.parse(dump);
   for (var i = 0; i < json.length; i++){
     if (cid!=json[i]['sid']){
@@ -20,11 +20,12 @@ function handleRequest(dump, cid){
   }
 }
 
+//wrapper for sending requests to backend
+//cid stands for "caller id"-- i.e. the parent of every node retrieved from the response.
 function httpGetAsync(theUrl, callback, cid)
 {
-  //console.log("request sent");
   var xmlHttp = new XMLHttpRequest();
-  xmlHttp.open("GET", theUrl, true); // true for asynchronous
+  xmlHttp.open("GET", theUrl, true);
   xmlHttp.setRequestHeader('Content-Type','text/plain');
   xmlHttp.onreadystatechange = function() {
       if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
@@ -35,10 +36,12 @@ function httpGetAsync(theUrl, callback, cid)
 
 }
 
+//wrapper for adding edge from id1 to id2
 function addEdge(id1, id2, numAttached){
   edges.add({from: id1, to: id2, length: Math.max(numAttached * 33, 95), color:"#2B7CE9", hoverWidth : 0, selectionWidth : 0})
 }
 
+//splits up string into (usually) <20 char chunks so long titles actually look nice
 function chunk(str, n) {
   var words = str.split(" ");
   var retVal = [];
@@ -46,9 +49,6 @@ function chunk(str, n) {
   while (words.length > 0){
     if (retVal.length == i+1){
       if ((retVal[i]+ " "+ words[0]).length < 20){
-        /*console.log((retVal[i]+ " "+ words[0]).length);
-        console.log(retVal[i]);
-        console.log(words[0]);*/
         retVal[i] += " " + words.shift();
 
       }
@@ -60,10 +60,10 @@ function chunk(str, n) {
       retVal.push(words.shift())
     }
   }
-  //console.log(retVal);
   return retVal;
 };
 
+//helper function for creating node
 function genNode(sid, title, img, parent){
   return {
     id: sid,
@@ -82,6 +82,8 @@ function genNode(sid, title, img, parent){
   };
 };
 
+//wrapper function for adding node using genNode
+//catches error and logs it if one is thrown (usually duplicate nodes are the culprit)
 function addNode(url,img,title,sid,parent){
   try {
     nodes.add([
@@ -121,10 +123,7 @@ var options = {
 nodes = new vis.DataSet(options);
 var edges = new vis.DataSet();
 
-//var starter = prompt("ID?");//37786
-//this needs to be deleted someday
-//httpGetAsync("http://localhost:5000/api/getinfo?malid="+starter, handleRequest, started)
-
+//handles starter request responses
 function handleStarter(dump, cid){
   var json = JSON.parse(dump);
   addNode(json['surl'],json['simg'],json['stitle'],json['sid'], 0);
@@ -132,6 +131,7 @@ function handleStarter(dump, cid){
   network.focus(cid,{scale:2});
 }
 
+//css for modal dialogues
 var cssConst = {
   margin: 'auto',
   width: '400px',
@@ -144,9 +144,12 @@ var cssConst = {
   transform: 'translate(-50%, -50%)',
 }
 
+//blocks with modal dialogue when loaded
 $(document).ready(function() {
+        //blocks ui with div "starter", uses cssConst from above for styling
         $.blockUI({ message: $('#starter'),  css: cssConst});
 
+        //picks a random anime from the list below, parses it and sends a starter request to the backend
         $('#suggest').click(function() {
             var myEvilListOfSuggestions =
             [
@@ -171,6 +174,7 @@ $(document).ready(function() {
             httpGetAsync("http://35.243.181.45:5000/api/getinfo?malid="+starter, handleStarter, starter)
         });
 
+        //reads input from starterid textbox, parses it and sends a starter request to the backend
         $('#starterSubmit').click(function() {
             var starter = document.getElementById("starterid").value;
             starter = starter.substring(0,starter.lastIndexOf("/"))
@@ -180,17 +184,6 @@ $(document).ready(function() {
         });
     });
 
-
-
-//var json = JSON.parse(dump);
-//addNode(json[i]['surl'],json[i]['simg'],json[i]['stitle'],json[i]['sid'])
-/*
-nodes.add([
-  {id: starter, label: 'Yagate Kimi ni Naru', image: 'https://myanimelist.cdn-dena.com/images/anime/1347/92092l.jpg', shape: 'image', font: font},
-]);
-*/
-
-
 var container = document.getElementById('mynetwork');
 var data = {
     nodes: nodes,
@@ -199,31 +192,35 @@ var data = {
 
 network = new vis.Network(container, data, options);
 
+//network clicked, tries to find clicked node (if any) and sends a request to backend to load recommended shows if one is found
 network.on( 'click', function(properties) {
-  network.redraw();
   var ids = properties.nodes;
   var clickedNodes = nodes.get(ids);
-  //console.log('clicked nodes:', clickedNodes);
   if (clickedNodes.length != 0)
     httpGetAsync("http://35.243.181.45:5000/api/getrecs?malid="+clickedNodes[0]['id'], handleRequest, clickedNodes[0]['id']);
 });
 
+//network rightclicked, tries to find rightclicked node (if any) and opens MAL link if one is found
+//note that because vis.js does not natively support something like properties.nodes, the node in question
+//must be found by using calling getNodeAt() with pointer.DOM.
 network.on("oncontext", function(properties) {
   var pointer = properties.pointer;
-  var clickedNodes = network.getNodeAt(pointer.DOM);
-  //console.log('rclicked nodes:', clickedNodes);
-  window.open("https://myanimelist.net/anime/"+clickedNodes)
-  //httpGetAsync("http://localhost:5000/api/getrecs?malid="+clickedNodes[0]['id'], handleRequest, clickedNodes[0]['id'])
+  var clickedNodes = network.getNodeAt(pointer.DOM);;
+  if(clickedNodes != undefined) window.open("https://myanimelist.net/anime/"+clickedNodes);
 });
 
+//highlights node with nodeid
 function highlightNode(nodeid){
     if(nodeid!=0)nodes.update({id:nodeid, shapeProperties: { useBorderWithImage:true}});
 }
 
+//unhighlights node with nodeid
 function unhighlightNode(nodeid){
     if(nodeid!=0)nodes.update({id:nodeid, shapeProperties: { useBorderWithImage:false}});
 }
 
+//searches the edges DataSet and highlights the first edge that passes the filter
+//note that the length of edgeList should always be one because duplicate edges are not supported
 function highlightEdge(fromId, toId){
     var edgeList =
       edges.get({
@@ -237,6 +234,8 @@ function highlightEdge(fromId, toId){
     edges.update(edge);
 }
 
+//searches the edges DataSet and unhighlights the first edge that passes the filter
+//note that the length of edgeList should always be one because duplicate edges are not supported
 function unhighlightEdge(fromId, toId){
     var edgeList =
       edges.get({
@@ -250,6 +249,8 @@ function unhighlightEdge(fromId, toId){
     edges.update(edge);
 }
 
+//recursively traces back nodes to the starter node, applying nodeFunc to all nodes in the way and
+//edgeFunc to all edges in the way, by using each node's "parent".
 function traceBackNodes(currNode, nodeFunc, edgeFunc){
   nodeFunc(currNode);
   if (currNode!=0){
@@ -259,20 +260,19 @@ function traceBackNodes(currNode, nodeFunc, edgeFunc){
   }
 }
 
+//detects when node is hovered over and calls traceBackNodes() to highlight the path back to the starter node
 network.on("hoverNode", function(properties) {
   var hoveredNode = properties.node;
-  //console.log('hovered nodes:', hoveredNode);
   traceBackNodes(hoveredNode, highlightNode, highlightEdge);
-  //httpGetAsync("http://localhost:5000/api/getrecs?malid="+clickedNodes[0]['id'], handleRequest, clickedNodes[0]['id'])
 });
 
+//detects when node is unhovered and calls traceBackNodes() to unhighlight the path back to the starter node
 network.on("blurNode", function(properties) {
   var unhoveredNode = properties.node;
-  //console.log('unhovered nodes:', unhoveredNode);
   traceBackNodes(unhoveredNode, unhighlightNode, unhighlightEdge);
-  //httpGetAsync("http://localhost:5000/api/getrecs?malid="+clickedNodes[0]['id'], handleRequest, clickedNodes[0]['id'])
 });
 
+//buttons in top left
 window.onload = function(){
   var meButton = document.getElementById('me');
   meButton.onclick = function(event) {

@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import urllib2
 import time
 
+#used for initial testing and benchmarking speed.
 
 malid = "5081"
 
@@ -29,7 +30,7 @@ print(time.time() - start)
 start = time.time()
 
 final = list(map(lambda x: "https://myanimelist.net/anime/" + (x[1] if x[0] == malid else x[0]), ids))
-        
+
 print final
 print(time.time() - start)
 start = time.time()

@@ -1,13 +1,10 @@
 from bs4 import BeautifulSoup
 import urllib2
-import logging
-#logging.basicConfig(filename='example.log',level=logging.DEBUG)
 
-
-
+#scrapes base malid's page for recommendationsself.
+#only takes first five recommendations to reduce waiting time and server strain.
 def scrapeRecs(malid):
     response = urllib2.urlopen("https://myanimelist.net/anime/" + str(malid))
-    #logging.debug('Opened '+str(malid))
     page_source = response.read()
     soup = BeautifulSoup(page_source, 'html.parser')
 
@@ -16,15 +13,15 @@ def scrapeRecs(malid):
     links = list(map(lambda x: x["href"], temp))[:5]
 
     ids = list(map(lambda x: x[x.rfind("/")+1:].split("-"), links))
-    #logging.debug('Opened '+str(ids))
 
     return list(map(lambda x: x[1] if x[0] == str(malid) else x[0], ids))
 
+#deprecated. Has been merged with scrapePicAndName(). Kept here to illustrate similarities and previous
+#redundancy between the two.
 def scrapePic(malid):
     try:
         response = urllib2.urlopen("https://myanimelist.net/anime/" + str(malid))
     except:
-        #logging.debug('Failed '+str(malid))
         return ""
 
     page_source = response.read()
@@ -33,11 +30,12 @@ def scrapePic(malid):
     images = soup.find_all('img', src=True)
     return list(filter(lambda x: "https://myanimelist.cdn-dena.com/images/anime/" in x['src'], images))[0]['src']
 
+#scrapes malid's page for image and titleself. Returned as list of strings.
+#if bad request, returns ["",""].
 def scrapePicAndName(malid):
     try:
         response = urllib2.urlopen("https://myanimelist.net/anime/" + str(malid))
     except:
-        #logging.debug('Failed '+str(malid))
         return ["",""]
 
     page_source = response.read()
@@ -47,6 +45,7 @@ def scrapePicAndName(malid):
     sname = (soup.title.string.rpartition(" - ")[0])[1:]
     return [image,sname]
 
+#for /api/getrecs requests
 def read(malid):
     recs = scrapeRecs(malid)
     retVal = []
@@ -62,6 +61,7 @@ def read(malid):
         })
     return retVal
 
+#for /api/getinfo requests
 def readOne(malid):
     imgAndName = scrapePicAndName(malid)
     if imgAndName[0] == "" or imgAndName[1] == "":
