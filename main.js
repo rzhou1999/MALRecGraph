@@ -147,6 +147,29 @@ var cssConst = {
 $(document).ready(function() {
         $.blockUI({ message: $('#starter'),  css: cssConst});
 
+        $('#suggest').click(function() {
+            var myEvilListOfSuggestions =
+            [
+              "https://myanimelist.net/anime/37786/Yagate_Kimi_ni_Naru",
+              "https://myanimelist.net/anime/20457/Inari_Konkon_Koi_Iroha",
+              "https://myanimelist.net/anime/13333/Tari_Tari",
+              "https://myanimelist.net/anime/32281/Kimi_no_Na_wa",
+              "https://myanimelist.net/anime/31043/Boku_dake_ga_Inai_Machi",
+              "https://myanimelist.net/anime/23289/Gekkan_Shoujo_Nozaki-kun",
+              "https://myanimelist.net/anime/12189/Hyouka",
+              "https://myanimelist.net/anime/11887/Kokoro_Connect",
+              "https://myanimelist.net/anime/34822/Tsuki_ga_Kirei",
+              "https://myanimelist.net/anime/37497/Irozuku_Sekai_no_Ashita_kara",
+              "https://myanimelist.net/anime/14355/Yama_no_Susume",
+            ]
+
+            starter = myEvilListOfSuggestions[Math.floor(Math.random() * myEvilListOfSuggestions.length)];;
+            starter = starter.substring(0,starter.lastIndexOf("/"))
+            starter = starter.substring(starter.lastIndexOf("/")+1)
+            $.blockUI({ message: "<h1>Please wait...</h1>", css: cssConst });
+            httpGetAsync("http://35.243.181.45:5000/api/getinfo?malid="+starter, handleStarter, starter)
+        });
+
         $('#starterSubmit').click(function() {
             var starter = document.getElementById("starterid").value;
             starter = starter.substring(0,starter.lastIndexOf("/"))

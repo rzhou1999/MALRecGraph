@@ -11,6 +11,11 @@
         #mynetwork {
             background-color: #222222;
         }
+
+        li.dotted{
+          text-decoration-line: underline;
+          text-decoration-style: dotted;
+        }
     </style>
 
     <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
@@ -49,7 +54,7 @@
         <h1>MALRecGraph</h1>
         <p>How to use:</p>
         <ul align = "left">
-          <li>Paste in a MAL link below.</li>
+          <li id = "suggest" class = "dotted" title="Need a suggestion? Click me!">Paste in a MAL link below</li>
           <li>Click anime to add shows people recommended (will take ~15 seconds)</li>
           <li>Right clicking will open the show's MAL page (enable popups!)</li>
           <li>Drag nodes around to rearrange</li>
