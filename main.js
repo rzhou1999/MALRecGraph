@@ -2,6 +2,7 @@ var nodes;
 var edges;
 var network;
 var count = 0;
+var clickedIds = [];
 
 var font ={
             size : 8,
@@ -18,6 +19,7 @@ function handleRequest(dump, cid){
       }
     }
   }
+  document.getElementById("progress"+cid).outerHTML = "";
 }
 
 //wrapper for sending requests to backend
@@ -170,7 +172,7 @@ $(document).ready(function() {
             starter = myEvilListOfSuggestions[Math.floor(Math.random() * myEvilListOfSuggestions.length)];;
             starter = starter.substring(0,starter.lastIndexOf("/"))
             starter = starter.substring(starter.lastIndexOf("/")+1)
-            $.blockUI({ message: "<h1>Please wait...</h1>", css: cssConst });
+            $.blockUI({ message: "<h1>Please wait...</h1><div class=progress></div>", css: cssConst });
             httpGetAsync("http://35.243.181.45:5000/api/getinfo?malid="+starter, handleStarter, starter)
         });
 
@@ -192,12 +194,24 @@ var data = {
 
 network = new vis.Network(container, data, options);
 
+var currentReqs = []
+
 //network clicked, tries to find clicked node (if any) and sends a request to backend to load recommended shows if one is found
 network.on( 'click', function(properties) {
   var ids = properties.nodes;
   var clickedNodes = nodes.get(ids);
-  if (clickedNodes.length != 0)
+  if (clickedNodes.length != 0 && !clickedIds.includes(clickedNodes[0]['id'])){
+    clickedIds.push(clickedNodes[0]['id']);
+
+    temp =  '<div id="progress' + clickedNodes[0]['id'] + '" class="progress-container">' +
+            '<div class="progress"></div>' +
+            '<h3 id="currentReq">' + "Loading recs for: " + clickedNodes[0]['label'].replace(/(\r\n\t|\n|\r\t)/gm," ") + '</h3>' +
+            '</div>'
+
+    document.getElementById("progress-master").innerHTML += temp;
+
     httpGetAsync("http://35.243.181.45:5000/api/getrecs?malid="+clickedNodes[0]['id'], handleRequest, clickedNodes[0]['id']);
+  }
 });
 
 //network rightclicked, tries to find rightclicked node (if any) and opens MAL link if one is found

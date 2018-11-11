@@ -1,0 +1,41 @@
+#progress-master {
+  position:fixed;
+  display:inline-block;
+  bottom:0px;
+  right: 0px;
+}
+
+.progress-container {
+  margin-left:auto;
+  position:relative;
+  display:table;
+  bottom:10px;
+  right: 10px;
+
+  border-radius: 7px;
+  overflow: visible;
+  border: 1px solid #aaa;
+  background-color: #00FF00;
+}
+
+.progress {
+    display:inline-flex;
+    border: 8px solid #f3f3f3; /* Light grey */
+    border-top: 8px solid #2B7CE9; /* Blue */
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s ease-in-out infinite;
+    margin:3px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#currentReq {
+  display:inline-flex;
+  margin:auto;
+  padding: 3px;
+}
