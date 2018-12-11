@@ -4,7 +4,7 @@ import time
 
 #used for initial testing and benchmarking speed.
 
-malid = "5081"
+malid = "23289"
 
 start = time.time()
 response = urllib2.urlopen("https://myanimelist.net/anime/" + malid)
@@ -40,7 +40,7 @@ for i in range(len(final)):
     page_source = response.read()
     soup = BeautifulSoup(page_source, 'html.parser')
     images = soup.find_all('img', src=True)
-    print [list(filter(lambda x: "https://cdn.myanimelist.net/images/anime/" in x['src'], images))[0]['src'],soup.title.string.split(" - ")[0]]
+    print [list(filter(lambda x: "https://cdn.myanimelist.net/images/anime/" in x['src'] or "https://myanimelist.cdn-dena.com/images/anime/" in x['src'], images))[0]['src'],soup.title.string.split(" - ")[0]]
 
 print(time.time() - start)
 start = time.time()

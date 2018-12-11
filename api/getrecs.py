@@ -28,7 +28,7 @@ def scrapePic(malid):
     soup = BeautifulSoup(page_source, 'html.parser')
 
     images = soup.find_all('img', src=True)
-    return list(filter(lambda x: "https://myanimelist.cdn-dena.com/images/anime/" in x['src'], images))[0]['src']
+    return list(filter(lambda x: "https://cdn.myanimelist.net/images/anime/" in x['src'] or "https://myanimelist.cdn-dena.com/images/anime/" in x['src'], images))[0]['src']
 
 #scrapes malid's page for image and titleself. Returned as list of strings.
 #if bad request, returns ["",""].
