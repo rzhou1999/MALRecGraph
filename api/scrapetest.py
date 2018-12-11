@@ -39,9 +39,8 @@ for i in range(len(final)):
     response = urllib2.urlopen(final[i])
     page_source = response.read()
     soup = BeautifulSoup(page_source, 'html.parser')
-
     images = soup.find_all('img', src=True)
-    print [list(filter(lambda x: "https://myanimelist.cdn-dena.com/images/anime/" in x['src'], images))[0]['src'],soup.title.string.split(" - ")[0]]
+    print [list(filter(lambda x: "https://cdn.myanimelist.net/images/anime/" in x['src'], images))[0]['src'],soup.title.string.split(" - ")[0]]
 
 print(time.time() - start)
 start = time.time()

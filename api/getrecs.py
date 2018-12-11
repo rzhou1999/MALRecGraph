@@ -41,7 +41,7 @@ def scrapePicAndName(malid):
     page_source = response.read()
     soup = BeautifulSoup(page_source, 'html.parser')
     images = soup.find_all('img', src=True)
-    image = list(filter(lambda x: "https://myanimelist.cdn-dena.com/images/anime/" in x['src'], images))[0]['src'].split(".jpg")[0]+"l.jpg"
+    image = list(filter(lambda x: "https://cdn.myanimelist.net/images/anime/" in x['src'], images))[0]['src'].split(".jpg")[0]+"l.jpg"
     sname = (soup.title.string.rpartition(" - ")[0])[1:]
     return [image,sname]
 
