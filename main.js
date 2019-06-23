@@ -181,7 +181,7 @@ $(document).ready(function() {
             var starter = document.getElementById("starterid").value;
             starter = starter.substring(0,starter.lastIndexOf("/"))
             starter = starter.substring(starter.lastIndexOf("/")+1)
-            $.blockUI({ message: "<h1>Please wait...</h1>", css: cssConst });
+            $.blockUI({ message: "<h1>Please wait...</h1><div class=progress></div>", css: cssConst });
             httpGetAsync("http://35.243.181.45:5000/api/getinfo?malid="+starter, handleStarter, starter)
         });
     });
