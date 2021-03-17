@@ -1,5 +1,5 @@
 # MALRecGraph
-Now available at http://randyzhou.com/MALRecGraph/
+Now available at http://randy-zhou.me/MALRecGraph/
 
 Visualizer for MyAnimeList userrecs.
 
